@@ -52,6 +52,9 @@ class EntityResolver:
             return Resolution(None, None, f"registry ID {registry_id} is not in reference data")
 
         candidates = [e for e in self._entities if normalize_name(e.name) == normalize_name(name)]
+        if not normalize_name(name):
+            # Names written only in non-Latin script normalize to "". Never match on an empty name.
+            return Resolution(None, None, f"name '{name}' has no matchable Latin characters")
         if not candidates:
             return Resolution(None, None, f"no reference entity named '{name}'")
 

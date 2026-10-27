@@ -212,7 +212,10 @@ def main() -> None:
         selected = result.findings[index]
         with graph_col:
             st.markdown("**Relationship graph**")
-            st.caption("Solid line: registry-ID match. Dashed line: name-and-state match. Grey dotted: co-mention, not used.")
+            st.caption(
+                "Reads left to right: event, facility, supplier, target. Solid line: registry-ID match. "
+                "Dashed line: name-and-state match. Faint dotted curve: co-mention, not used as evidence. Scroll to zoom."
+            )
             components.html(render_finding_graph(graph, selected), height=500)
 
         st.divider()
