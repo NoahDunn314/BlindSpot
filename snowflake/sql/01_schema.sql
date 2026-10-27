@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS SOURCES (
     UPDATE_CADENCE       VARCHAR,
     MATCHING_LIMITATIONS VARCHAR,
     IS_SYNTHETIC         BOOLEAN,
-    LOADED_AT            TIMESTAMP_NTZ
+    LOADED_AT            TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP()
 );
 
 -- Current normalized record for each source observation. Keyed by RECORD_ID, so reloads are idempotent.

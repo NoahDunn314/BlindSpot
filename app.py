@@ -43,6 +43,11 @@ def render_banner(repository, settings: Settings) -> None:
         )
     else:
         st.info(f"**SNOWFLAKE MODE.** Reading from account `{settings.snowflake_account}`, database `{settings.snowflake_database}`.")
+        if st.session_state.get("has_synthetic"):
+            st.warning(
+                "The loaded Snowflake data includes SYNTHETIC fixtures with fictional companies, facilities, and notices. "
+                "Findings from those records are not real-world findings."
+            )
 
 
 def render_explanation_mode(result: InvestigationResult, settings: Settings) -> None:
@@ -132,6 +137,8 @@ def main() -> None:
         repository = get_repository(settings)
         if "graph" not in st.session_state:
             st.session_state.graph = repository.load_graph()
+            if repository.mode == "snowflake":
+                st.session_state.has_synthetic = repository.has_synthetic_records()
     except SnowflakeError as exc:
         st.error(f"Snowflake error. Blindspot did not fall back to demo data. Details: {exc}")
         st.stop()

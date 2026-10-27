@@ -50,13 +50,16 @@ Co-mentions (two companies named in one article) are shown but never used as evi
 
 ## Snowflake mode
 
-1. Copy the environment template and fill in your values. Never commit `.env`.
+1. Copy the environment template and fill in your values. Set `SNOWFLAKE_ACCOUNT`, `SNOWFLAKE_USER`, and
+   `SNOWFLAKE_WAREHOUSE`, plus either `SNOWFLAKE_PASSWORD` or `SNOWFLAKE_AUTHENTICATOR=externalbrowser`.
+   Use a role with permission to create a database and schema for the initial load. Never commit `.env`.
 
    ```bash
    cp .env.example .env
    ```
 
-2. Install the optional connector and load the schema and demo data:
+2. Install the optional connector and load the schema and synthetic demo data. The loader provisions Snowflake
+   regardless of `BLINDSPOT_MODE`, so the template can remain in demo mode until the load succeeds:
 
    ```bash
    pip install -r requirements-snowflake.txt
@@ -64,7 +67,7 @@ Co-mentions (two companies named in one article) are shown but never used as evi
    python scripts/check_parity.py
    ```
 
-3. Set `BLINDSPOT_MODE=snowflake` in `.env` and run `streamlit run app.py`.
+3. After the load and parity check pass, set `BLINDSPOT_MODE=snowflake` in `.env` and run `streamlit run app.py`.
 
 Snowflake's role in the design:
 

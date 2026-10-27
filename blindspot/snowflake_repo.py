@@ -66,6 +66,11 @@ def connect(settings: Settings, with_database: bool = True):
     missing = [name for name, value in required.items() if not value]
     if missing:
         raise SnowflakeError(f"Snowflake mode needs these variables set in .env or the environment: {', '.join(missing)}")
+    if not settings.snowflake_password and not settings.snowflake_authenticator:
+        raise SnowflakeError(
+            "Snowflake authentication is not configured. Set SNOWFLAKE_PASSWORD or "
+            "SNOWFLAKE_AUTHENTICATOR (for example, externalbrowser)."
+        )
 
     kwargs = {
         "account": settings.snowflake_account,
@@ -188,6 +193,9 @@ class SnowflakeRepository:
     def source_names(self) -> dict[str, str]:
         return {row[0]: row[1] for row in self._rows("SELECT SOURCE_ID, SOURCE_NAME FROM SOURCES")}
 
+    def has_synthetic_records(self) -> bool:
+        return bool(self._rows("SELECT 1 FROM SOURCE_RECORDS WHERE IS_SYNTHETIC LIMIT 1"))
+
     # Write path used by the loader and by investigation saving
 
     def execute_script(self, sql_text: str) -> None:
@@ -212,8 +220,8 @@ class SnowflakeRepository:
             cursor.executemany(
                 """
                 INSERT INTO SOURCES (SOURCE_ID, SOURCE_NAME, ACCESS_NOTES, LICENSING, UPDATE_CADENCE,
-                                     MATCHING_LIMITATIONS, IS_SYNTHETIC, LOADED_AT)
-                SELECT %s, %s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP()
+                                     MATCHING_LIMITATIONS, IS_SYNTHETIC)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
                 """,
                 rows,
             )

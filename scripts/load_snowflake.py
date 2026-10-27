@@ -22,9 +22,6 @@ from blindspot.snowflake_repo import SnowflakeError, SnowflakeRepository, connec
 def main() -> int:
     load_dotenv()
     settings = load_settings()
-    if settings.mode != "snowflake":
-        print("Set BLINDSPOT_MODE=snowflake in .env to load Snowflake. Current mode:", settings.mode)
-        return 1
 
     adapters = demo_adapters()
     records = ingest(adapters)

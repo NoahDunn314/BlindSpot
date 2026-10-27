@@ -128,3 +128,16 @@ def test_connect_names_every_missing_variable():
         snowflake_repo.connect(load_settings({"BLINDSPOT_MODE": "snowflake"}))
     for name in ("SNOWFLAKE_ACCOUNT", "SNOWFLAKE_USER", "SNOWFLAKE_WAREHOUSE"):
         assert name in str(error.value)
+
+
+@pytest.mark.skipif(snowflake_repo.sf is None, reason="snowflake-connector-python not installed")
+def test_connect_requires_an_authentication_method():
+    settings = load_settings(
+        {
+            "SNOWFLAKE_ACCOUNT": "account",
+            "SNOWFLAKE_USER": "user",
+            "SNOWFLAKE_WAREHOUSE": "warehouse",
+        }
+    )
+    with pytest.raises(SnowflakeError, match="SNOWFLAKE_PASSWORD or SNOWFLAKE_AUTHENTICATOR"):
+        snowflake_repo.connect(settings)

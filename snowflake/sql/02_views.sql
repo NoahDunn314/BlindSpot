@@ -41,8 +41,9 @@ SELECT
     f.KEY                                                  AS ROLE,
     f.VALUE:name::STRING                                   AS MENTION_NAME,
     NORMALIZE_NAME(f.VALUE:name::STRING)                   AS NORM_NAME,
-    f.VALUE:registry_id::STRING                            AS REGISTRY_ID,
-    f.VALUE:state::STRING                                  AS STATE_CODE
+    -- Empty strings count as missing, as in Python where "" is falsy.
+    NULLIF(f.VALUE:registry_id::STRING, '')                AS REGISTRY_ID,
+    NULLIF(f.VALUE:state::STRING, '')                      AS STATE_CODE
 FROM SOURCE_RECORDS r,
      LATERAL FLATTEN(INPUT => OBJECT_CONSTRUCT('subject', r.PAYLOAD:subject, 'object', r.PAYLOAD:object)) f
 WHERE r.RECORD_TYPE = 'relationship';
