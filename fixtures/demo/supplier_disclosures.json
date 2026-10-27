@@ -1,0 +1,41 @@
+[
+  {
+    "record_id": "SD-001",
+    "record_type": "relationship",
+    "observed_at": "2026-03-02T00:00:00Z",
+    "url": "fixture://demo/supplier_disclosures#SD-001",
+    "payload": {
+      "relation": "supplies_to",
+      "status": "documented",
+      "subject": {"name": "Pinecrest Metal Works LLC", "state": "IN"},
+      "object": {"name": "Harborline Fabrication Co", "registry_id": "HF-1001"},
+      "detail": "Bracket assemblies"
+    }
+  },
+  {
+    "record_id": "SD-002",
+    "record_type": "relationship",
+    "observed_at": "2026-03-02T00:00:00Z",
+    "url": "fixture://demo/supplier_disclosures#SD-002",
+    "payload": {
+      "relation": "supplies_to",
+      "status": "documented",
+      "subject": {"name": "Bluefield Precision Parts Inc", "state": "PA"},
+      "object": {"name": "Harborline Fabrication Co", "registry_id": "HF-1001"},
+      "detail": "Machined fasteners"
+    }
+  },
+  {
+    "record_id": "SD-003",
+    "record_type": "relationship",
+    "observed_at": "2026-03-02T00:00:00Z",
+    "url": "fixture://demo/supplier_disclosures#SD-003",
+    "payload": {
+      "relation": "supplies_to",
+      "status": "documented",
+      "subject": {"name": "Cedar Valley Packaging Co", "state": "MI"},
+      "object": {"name": "Harborline Fabrication Co", "registry_id": "HF-1001"},
+      "detail": "Corrugated packaging"
+    }
+  }
+]

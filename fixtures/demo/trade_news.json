@@ -1,0 +1,15 @@
+[
+  {
+    "record_id": "NW-0077",
+    "record_type": "relationship",
+    "observed_at": "2026-05-20T00:00:00Z",
+    "url": "fixture://demo/trade_news#NW-0077",
+    "payload": {
+      "relation": "co_mentioned",
+      "status": "co_occurrence",
+      "subject": {"name": "Harborline Fabrication Co"},
+      "object": {"name": "Bluefield Precision Parts Inc"},
+      "detail": "Both companies are listed as exhibitors at a regional tooling expo. The article states no business relationship."
+    }
+  }
+]

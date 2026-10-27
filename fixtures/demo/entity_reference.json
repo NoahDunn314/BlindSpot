@@ -1,0 +1,65 @@
+[
+  {
+    "record_id": "ER-001",
+    "record_type": "entity_reference",
+    "observed_at": "2026-01-05T00:00:00Z",
+    "url": "fixture://demo/entity_reference#ER-001",
+    "payload": {"entity_id": "ent-harborline", "kind": "company", "name": "Harborline Fabrication Co", "registry_id": "HF-1001", "state": "OH"}
+  },
+  {
+    "record_id": "ER-002",
+    "record_type": "entity_reference",
+    "observed_at": "2026-01-05T00:00:00Z",
+    "url": "fixture://demo/entity_reference#ER-002",
+    "payload": {"entity_id": "ent-pinecrest", "kind": "company", "name": "Pinecrest Metal Works LLC", "registry_id": "PM-2044", "state": "IN"}
+  },
+  {
+    "record_id": "ER-003",
+    "record_type": "entity_reference",
+    "observed_at": "2026-01-05T00:00:00Z",
+    "url": "fixture://demo/entity_reference#ER-003",
+    "payload": {"entity_id": "ent-pinecrest-tx", "kind": "company", "name": "Pinecrest Metal Works LLC", "registry_id": "PM-9981", "state": "TX"}
+  },
+  {
+    "record_id": "ER-004",
+    "record_type": "entity_reference",
+    "observed_at": "2026-01-05T00:00:00Z",
+    "url": "fixture://demo/entity_reference#ER-004",
+    "payload": {"entity_id": "ent-bluefield", "kind": "company", "name": "Bluefield Precision Parts Inc", "registry_id": "BP-3317", "state": "PA"}
+  },
+  {
+    "record_id": "ER-005",
+    "record_type": "entity_reference",
+    "observed_at": "2026-01-05T00:00:00Z",
+    "url": "fixture://demo/entity_reference#ER-005",
+    "payload": {"entity_id": "ent-cedar", "kind": "company", "name": "Cedar Valley Packaging Co", "registry_id": "CV-5520", "state": "MI"}
+  },
+  {
+    "record_id": "ER-006",
+    "record_type": "entity_reference",
+    "observed_at": "2026-01-05T00:00:00Z",
+    "url": "fixture://demo/entity_reference#ER-006",
+    "payload": {"entity_id": "ent-ironvale-p2", "kind": "facility", "name": "Ironvale Castings Plant 2", "registry_id": "IV-P2-0091", "state": "IN"}
+  },
+  {
+    "record_id": "ER-007",
+    "record_type": "entity_reference",
+    "observed_at": "2026-01-05T00:00:00Z",
+    "url": "fixture://demo/entity_reference#ER-007",
+    "payload": {"entity_id": "ent-cedar-p1", "kind": "facility", "name": "Cedar Valley Plant 1", "registry_id": "CV-P1-0003", "state": "MI"}
+  },
+  {
+    "record_id": "ER-008",
+    "record_type": "entity_reference",
+    "observed_at": "2026-01-05T00:00:00Z",
+    "url": "fixture://demo/entity_reference#ER-008",
+    "payload": {"entity_id": "ent-ren-0412", "kind": "event", "name": "Regional notice REN-2026-0412 (production hold)", "registry_id": "REN-2026-0412", "state": "IN"}
+  },
+  {
+    "record_id": "ER-009",
+    "record_type": "entity_reference",
+    "observed_at": "2026-01-05T00:00:00Z",
+    "url": "fixture://demo/entity_reference#ER-009",
+    "payload": {"entity_id": "ent-ren-0455", "kind": "event", "name": "Regional notice REN-2026-0455 (records correction)", "registry_id": "REN-2026-0455", "state": "IN"}
+  }
+]

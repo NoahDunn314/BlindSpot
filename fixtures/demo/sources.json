@@ -1,0 +1,57 @@
+[
+  {
+    "source_id": "entity_reference",
+    "file": "entity_reference.json",
+    "name": "Entity reference list (SYNTHETIC)",
+    "access": "Fixture file in fixtures/demo. Stands in for a reference table built from public company and facility registries. No live equivalent is implemented yet.",
+    "credentials_required": false,
+    "cost": "Free (fixture)",
+    "licensing": "All names and identifiers are fictional. No license applies.",
+    "update_cadence": "Static fixture. A real registry feed would change slowly.",
+    "matching_limitations": "Assumes this list is complete. Real registries have duplicate names across jurisdictions, which the resolver must handle."
+  },
+  {
+    "source_id": "supplier_disclosures",
+    "file": "supplier_disclosures.json",
+    "name": "Supplier disclosures (SYNTHETIC)",
+    "access": "Fixture file in fixtures/demo. Stands in for buyer-published supplier lists.",
+    "credentials_required": false,
+    "cost": "Free (fixture)",
+    "licensing": "Fictional data. Real supplier lists vary by publisher and may restrict reuse.",
+    "update_cadence": "Static fixture. Real disclosures are usually refreshed annually or quarterly.",
+    "matching_limitations": "Often names suppliers without registry IDs, so matches rely on name and state and can be ambiguous."
+  },
+  {
+    "source_id": "facility_registry",
+    "file": "facility_registry.json",
+    "name": "Facility registry (SYNTHETIC)",
+    "access": "Fixture file in fixtures/demo. Stands in for a public operator-to-facility registry.",
+    "credentials_required": false,
+    "cost": "Free (fixture)",
+    "licensing": "Fictional data. No license applies.",
+    "update_cadence": "Static fixture. Real facility registries update irregularly.",
+    "matching_limitations": "Operator-to-facility links may be incomplete. A missing link does not prove there is no relationship."
+  },
+  {
+    "source_id": "regulatory_notices",
+    "file": "regulatory_notices.json",
+    "name": "Regulatory notices (SYNTHETIC)",
+    "access": "Fixture file in fixtures/demo. Stands in for government notices that name a facility or company.",
+    "credentials_required": false,
+    "cost": "Free (fixture)",
+    "licensing": "Fictional data. No license applies.",
+    "update_cadence": "Static fixture. Real notice feeds are typically updated daily.",
+    "matching_limitations": "Notices often name companies informally. Records that name a company without a state or registry ID are not linked."
+  },
+  {
+    "source_id": "trade_news",
+    "file": "trade_news.json",
+    "name": "Trade news (SYNTHETIC)",
+    "access": "Fixture file in fixtures/demo. Stands in for news articles.",
+    "credentials_required": false,
+    "cost": "Free (fixture)",
+    "licensing": "Fictional data. Real news content is copyrighted and must not be stored without a license.",
+    "update_cadence": "Static fixture. Real news is continuous.",
+    "matching_limitations": "Two companies appearing in one article is only a co-mention. It is not evidence of a business relationship, so Blindspot never uses co-mentions for discovery."
+  }
+]

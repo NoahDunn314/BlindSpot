@@ -1,0 +1,41 @@
+[
+  {
+    "record_id": "FR-101",
+    "record_type": "relationship",
+    "observed_at": "2026-02-10T00:00:00Z",
+    "url": "fixture://demo/facility_registry#FR-101",
+    "payload": {
+      "relation": "uses_facility",
+      "status": "documented",
+      "subject": {"name": "Pinecrest Metal Works LLC", "registry_id": "PM-2044", "state": "IN"},
+      "object": {"name": "Ironvale Castings Plant 2", "registry_id": "IV-P2-0091", "state": "IN"},
+      "detail": "Casting subcontractor for bracket blanks"
+    }
+  },
+  {
+    "record_id": "FR-102",
+    "record_type": "relationship",
+    "observed_at": "2026-02-11T00:00:00Z",
+    "url": "fixture://demo/facility_registry#FR-102",
+    "payload": {
+      "relation": "uses_facility",
+      "status": "documented",
+      "subject": {"name": "Bluefield Precision Parts Inc", "registry_id": "BP-3317", "state": "PA"},
+      "object": {"name": "Ironvale Castings Plant 2", "registry_id": "IV-P2-0091", "state": "IN"},
+      "detail": "Heat-treatment subcontractor"
+    }
+  },
+  {
+    "record_id": "FR-103",
+    "record_type": "relationship",
+    "observed_at": "2026-02-12T00:00:00Z",
+    "url": "fixture://demo/facility_registry#FR-103",
+    "payload": {
+      "relation": "uses_facility",
+      "status": "documented",
+      "subject": {"name": "Cedar Valley Packaging Co", "registry_id": "CV-5520", "state": "MI"},
+      "object": {"name": "Cedar Valley Plant 1", "registry_id": "CV-P1-0003", "state": "MI"},
+      "detail": "Operates its own plant"
+    }
+  }
+]

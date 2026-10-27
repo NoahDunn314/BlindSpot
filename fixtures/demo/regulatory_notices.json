@@ -1,0 +1,28 @@
+[
+  {
+    "record_id": "RN-0412",
+    "record_type": "relationship",
+    "observed_at": "2026-09-14T00:00:00Z",
+    "url": "fixture://demo/regulatory_notices#RN-0412",
+    "payload": {
+      "relation": "notice_applies_to",
+      "status": "documented",
+      "subject": {"name": "Regional notice REN-2026-0412 (production hold)", "registry_id": "REN-2026-0412", "state": "IN"},
+      "object": {"name": "Ironvale Castings Plant 2", "registry_id": "IV-P2-0091", "state": "IN"},
+      "detail": "Production hold pending corrective action on furnace emissions records"
+    }
+  },
+  {
+    "record_id": "RN-0455",
+    "record_type": "relationship",
+    "observed_at": "2026-10-02T00:00:00Z",
+    "url": "fixture://demo/regulatory_notices#RN-0455",
+    "payload": {
+      "relation": "notice_applies_to",
+      "status": "documented",
+      "subject": {"name": "Regional notice REN-2026-0455 (records correction)", "registry_id": "REN-2026-0455", "state": "IN"},
+      "object": {"name": "Pinecrest Metal Works LLC"},
+      "detail": "Notice names the company without a state or registry ID"
+    }
+  }
+]
