@@ -55,6 +55,41 @@ class EvidenceRetriever:
         return found
 
 
+def validate_explanation(explanation: Explanation, allowed_ids: set[str]) -> list[str]:
+    """Return every reason this explanation must not be shown. An empty list means it passed.
+
+    Kept separate from FindingValidator so the Claude Code worker CLI can reject a bad reply
+    with the same rules, using only the evidence IDs recorded in the job.
+    """
+    errors: list[str] = []
+
+    if not explanation.confirmed_facts:
+        errors.append("no confirmed facts listed")
+    if not explanation.unknowns:
+        errors.append("no unknowns or limitations listed")
+    if not explanation.next_steps:
+        errors.append("no next steps listed")
+
+    for label, claims in (("confirmed fact", explanation.confirmed_facts), ("inference", explanation.inferences)):
+        for claim in claims:
+            if not claim.evidence_ids:
+                errors.append(f"{label} has no evidence: {claim.text[:60]}")
+                continue
+            outside = set(claim.evidence_ids) - allowed_ids
+            if outside:
+                errors.append(f"{label} cites evidence outside this finding: {sorted(outside)}")
+
+    texts = [explanation.title, explanation.summary, explanation.why_it_matters]
+    texts += [claim.text for claim in explanation.confirmed_facts + explanation.inferences]
+    texts += list(explanation.unknowns) + list(explanation.next_steps)
+    for text in texts:
+        if any(pattern.search(text) for pattern in FORBIDDEN_NUMERIC_PATTERNS):
+            errors.append(f"contains a numeric probability or percentage: {text[:60]}")
+            break
+
+    return errors
+
+
 class FindingValidator:
     """Checks that an explanation cites only evidence that supports this finding."""
 
@@ -63,30 +98,4 @@ class FindingValidator:
         self.allowed_ids = set(finding.evidence_ids) & set(evidence)
 
     def validate(self, explanation: Explanation) -> list[str]:
-        errors: list[str] = []
-
-        if not explanation.confirmed_facts:
-            errors.append("no confirmed facts listed")
-        if not explanation.unknowns:
-            errors.append("no unknowns or limitations listed")
-        if not explanation.next_steps:
-            errors.append("no next steps listed")
-
-        for label, claims in (("confirmed fact", explanation.confirmed_facts), ("inference", explanation.inferences)):
-            for claim in claims:
-                if not claim.evidence_ids:
-                    errors.append(f"{label} has no evidence: {claim.text[:60]}")
-                    continue
-                outside = set(claim.evidence_ids) - self.allowed_ids
-                if outside:
-                    errors.append(f"{label} cites evidence outside this finding: {sorted(outside)}")
-
-        texts = [explanation.title, explanation.summary, explanation.why_it_matters]
-        texts += [claim.text for claim in explanation.confirmed_facts + explanation.inferences]
-        texts += list(explanation.unknowns) + list(explanation.next_steps)
-        for text in texts:
-            if any(pattern.search(text) for pattern in FORBIDDEN_NUMERIC_PATTERNS):
-                errors.append(f"contains a numeric probability or percentage: {text[:60]}")
-                break
-
-        return errors
+        return validate_explanation(explanation, self.allowed_ids)

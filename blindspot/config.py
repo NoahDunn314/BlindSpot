@@ -39,6 +39,7 @@ class Settings:
     snowflake_schema: str
     anthropic_api_key: str | None
     model: str
+    model_provider: str | None  # "anthropic", "claude_code", or None for the deterministic demo
 
 
 def load_settings(env: dict | None = None) -> Settings:
@@ -46,6 +47,10 @@ def load_settings(env: dict | None = None) -> Settings:
     mode = (source.get("BLINDSPOT_MODE") or "demo").strip().lower()
     if mode not in {"demo", "snowflake"}:
         raise ValueError(f"BLINDSPOT_MODE must be 'demo' or 'snowflake', not {mode!r}.")
+
+    provider = (source.get("BLINDSPOT_PROVIDER") or "").strip().lower() or None
+    if provider not in {None, "anthropic", "claude_code"}:
+        raise ValueError(f"BLINDSPOT_PROVIDER must be 'anthropic' or 'claude_code', not {provider!r}.")
 
     def value(name: str) -> str | None:
         return (source.get(name) or "").strip() or None
@@ -62,4 +67,5 @@ def load_settings(env: dict | None = None) -> Settings:
         snowflake_schema=value("SNOWFLAKE_SCHEMA") or "CORE",
         anthropic_api_key=value("ANTHROPIC_API_KEY"),
         model=value("BLINDSPOT_MODEL") or DEFAULT_MODEL,
+        model_provider=provider or ("anthropic" if value("ANTHROPIC_API_KEY") else None),
     )

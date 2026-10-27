@@ -11,6 +11,7 @@ from blindspot.investigation import AnthropicClient, InvestigationAgent, investi
 from blindspot.models import Finding, Graph, InvestigationResult
 from blindspot.repository import open_repository
 from blindspot.snowflake_repo import SnowflakeError
+from blindspot.worker import ClaudeCodeWorkerClient, worker_available
 
 SAMPLES = [
     ("Harborline Fabrication Co", "ent-harborline", "Vendor check. Three suppliers, one of which shares a facility with another."),
@@ -25,13 +26,17 @@ def get_repository(settings: Settings):
 
 
 def make_agent(settings: Settings) -> InvestigationAgent:
-    if settings.anthropic_api_key:
+    if settings.model_provider == "claude_code":
+        return InvestigationAgent(ClaudeCodeWorkerClient())
+    if settings.model_provider == "anthropic" and settings.anthropic_api_key:
         return InvestigationAgent(AnthropicClient(settings.anthropic_api_key, settings.model))
     return InvestigationAgent()
 
 
 def run_investigation(repository, settings: Settings, target_id: str) -> None:
-    st.session_state.result = investigate(repository, target_id, make_agent(settings))
+    waiting_on_worker = settings.model_provider == "claude_code" and worker_available()
+    with st.spinner("Waiting for the Claude Code worker to analyze the evidence..." if waiting_on_worker else "Investigating..."):
+        st.session_state.result = investigate(repository, target_id, make_agent(settings))
     st.session_state.selected_finding = None
 
 
@@ -54,7 +59,9 @@ def render_explanation_mode(result: InvestigationResult, settings: Settings) -> 
     modes = {explanation.mode for explanation in result.explanations.values()}
     if not modes:
         return
-    if modes == {"live_model"}:
+    if modes == {"claude_code_worker"}:
+        st.caption("Explanation: analyzed by a Claude Code worker session, then validated against the finding's source evidence.")
+    elif modes == {"live_model"}:
         st.caption(f"Explanation: live AI-generated with model `{settings.model}`, validated against source evidence.")
     else:
         st.caption("Explanation: deterministic demo template. No model API key is configured, so this is not an AI-generated investigation.")
@@ -144,6 +151,14 @@ def main() -> None:
         st.stop()
 
     render_banner(repository, settings)
+    if settings.model_provider == "claude_code":
+        if worker_available():
+            st.success("A Claude Code worker is listening. Explanations will be written by that session and validated here.")
+        else:
+            st.warning(
+                "No Claude Code worker is listening, so explanations will use the deterministic demo template. "
+                "In a Claude Code session in this folder, run `python scripts/worker.py listen` in the background. See docs/CLAUDE_CODE_WORKER.md."
+            )
     graph = st.session_state.graph
     st.session_state.setdefault("result", None)
     st.session_state.setdefault("selected_finding", None)

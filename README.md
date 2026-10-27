@@ -6,7 +6,7 @@ Blindspot answers one question: *what important connection would I miss if I exa
 
 It is built for procurement and vendor-risk professionals, but the architecture is general.
 
-> **Status: hackathon MVP.** The demo mode works end to end. The Snowflake mode is implemented but not yet verified against a live account (see [Limitations](#limitations)). **All data in this repository is synthetic.**
+> **Status: hackathon MVP.** The demo mode works end to end. The Snowflake load and the Python-versus-SQL parity check have passed on a live account with the synthetic fixtures. The Snowflake-mode UI and the save-to-Snowflake path have not been verified (see [Limitations](#limitations)). **All data in this repository is synthetic.**
 
 ## Quick start (demo mode, no credentials)
 
@@ -83,7 +83,9 @@ The full schema is in [docs/COCO_INTEGRATION.md](docs/COCO_INTEGRATION.md). The 
 
 Set `ANTHROPIC_API_KEY` in `.env` to use a live model. `BLINDSPOT_MODEL` defaults to `claude-sonnet-5-5`.
 
-Without a key, the app shows a deterministic explanation and says so in the caption. That explanation is a template built from the finding's own records. It is not an AI investigation.
+A Claude Code session can write the explanations instead of the API: set `BLINDSPOT_PROVIDER=claude_code` and see [docs/CLAUDE_CODE_WORKER.md](docs/CLAUDE_CODE_WORKER.md). The reply goes through the same validator.
+
+Without a key or worker, the app shows a deterministic explanation and says so in the caption. That explanation is a template built from the finding's own records. It is not an AI investigation.
 
 The model never decides which facts exist. Its output is parsed and validated before it is shown. If validation fails, the app discards the output and shows the deterministic explanation with a note.
 
@@ -108,10 +110,12 @@ blindspot/
   repository.py             Repository protocol and DemoRepository
   snowflake_repo.py         SnowflakeRepository (optional dependency)
   graph_view.py             pyvis graph for one finding
+  worker.py                 Claude Code listening-worker queue (see docs/CLAUDE_CODE_WORKER.md)
 fixtures/demo/              Synthetic sources and sources.json metadata
 snowflake/sql/              Schema, views, refresh, and checks
 scripts/
   load_snowflake.py         Create schema and load demo data
+  worker.py                 listen / reply / status for the Claude Code worker
   check_parity.py           Compare demo and Snowflake results
 evaluation/run_eval.py      Deterministic evaluation harness
 tests/                      pytest suite
@@ -126,10 +130,10 @@ What the demo data does and does not prove:
 - **A missing connection is not evidence of absence.** The control case returns no finding because these sources do not show one.
 - **Name matching is strict.** Typos, abbreviations, and translations are not matched. Ambiguous names are rejected.
 - **Only the target's suppliers are traced.** An investigation of a supplier finds nothing, because the patterns do not follow customers.
-- **The Snowflake SQL is untested here.** No Snowflake account was available during development. `scripts/check_parity.py` is the test to run first.
+- **Snowflake verification is partial.** `scripts/load_snowflake.py` (all integrity checks at 0) and `scripts/check_parity.py` (`PARITY OK`) passed on a live account using the 18 synthetic records. Not yet verified: the app running in Snowflake mode, saving investigations to `INVESTIGATIONS` and `FINDINGS`, and larger or real data.
 - **Confidence labels are rules.** They are not probabilities of real-world risk.
 - **The UI was checked with Streamlit's headless test harness, not in a browser.** Layout and responsive behavior have not been visually verified.
 
 ## License
 
-Not yet chosen. Add a license file before publishing.
+MIT. See [LICENSE](LICENSE).

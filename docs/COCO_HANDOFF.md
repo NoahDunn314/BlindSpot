@@ -11,7 +11,7 @@ Product rule: **Blindspot must never confuse a plausible story with a verified d
 ## Current state
 
 - Demo mode works end to end over **synthetic** fixtures (fictional companies, 18 records, five sources). `python -m pytest` passes (36 tests, including fake-connection tests of `SnowflakeRepository`) and `python evaluation/run_eval.py` reports 17/17.
-- Snowflake mode is **implemented but has never run against a Snowflake account.** The SQL is unverified. This is your first job.
+- Snowflake mode: `load_snowflake.py` (all checks 0) and `check_parity.py` (`PARITY OK`) have passed on a live account with the synthetic fixtures. Not yet verified: the app in Snowflake mode and `save_investigation` against real tables. Re-run both scripts after any change to the SQL or resolver.
 - No live public-data adapters exist. All data is synthetic and labeled so.
 
 ## Your task

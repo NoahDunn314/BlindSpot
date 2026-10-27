@@ -89,7 +89,7 @@ python scripts/check_parity.py
 
 `check_parity.py` is the most important check. It compares the Python graph with the Snowflake graph (entities, edges, rejections, and findings). If you change the Python resolver or the SQL views, run it again.
 
-**Status:** the SQL has not been run against a live account in this repository. The static test `tests/test_snowflake_static.py` checks the suffix list only. Run `load_snowflake.py` and `check_parity.py` once against a real account before relying on Snowflake mode.
+**Status:** `load_snowflake.py` and `check_parity.py` have passed on a live account with the 18 synthetic records. The static test `tests/test_snowflake_static.py` checks the suffix list only. Not yet verified: the app in Snowflake mode, saving investigations, and behavior on larger or real data. Re-run both scripts after any SQL or resolver change.
 
 ## 3. Data-source adapter contract
 
@@ -253,7 +253,7 @@ Maps record IDs to `Evidence(record_id, source_id, source_name, url, observed_at
 - The investigation trace only follows suppliers of the target. It does not follow customers, owners, or the target's own facilities.
 - Only one trailing legal suffix is removed in name normalization.
 - The rationale text stored in Snowflake differs from the Python version. Parity checks compare outcomes, not text.
-- The Snowflake SQL is untested against a live account in this repository.
+- The Snowflake SQL has been checked only against the 18 synthetic records. Larger or real data may expose cases the fixtures do not cover.
 - Confidence labels are rules. They are not calibrated probabilities and must not be presented as such.
 
 ## 10. How to run tests and validate a proposed change

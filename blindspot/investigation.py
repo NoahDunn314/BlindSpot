@@ -10,6 +10,7 @@ Without an API key, the deterministic explanation is used and labeled as a demo.
 from __future__ import annotations
 
 import json
+import re
 import urllib.error
 import urllib.request
 from dataclasses import dataclass
@@ -90,6 +91,11 @@ def build_prompt(finding: Finding, evidence: Mapping[str, Evidence], names: Mapp
         if record_id in finding.evidence_ids:
             lines.append(f"- record_id {record_id} ({item.source_name}, {item.observed_at[:10]}): {item.summary}")
     return "\n".join(lines)
+
+
+def evidence_ids_in_prompt(prompt: str) -> list[str]:
+    """The record IDs a prompt from build_prompt offers as citable evidence."""
+    return re.findall(r"^- record_id (\S+) \(", prompt, flags=re.MULTILINE)
 
 
 def parse_explanation(raw: str, mode: str) -> Explanation:
@@ -219,14 +225,16 @@ class InvestigationAgent:
 
     @property
     def mode_label(self) -> str:
-        return "live model" if self.client is not None else "deterministic demo"
+        if self.client is None:
+            return "deterministic demo"
+        return "claude code worker" if getattr(self.client, "mode", "") == "claude_code_worker" else "live model"
 
     def explain(self, finding: Finding, evidence: Mapping[str, Evidence], names: Mapping[str, str]) -> tuple[Explanation, list[str]]:
         notes: list[str] = []
         if self.client is not None:
             try:
                 raw = self.client.complete(build_prompt(finding, evidence, names))
-                candidate = parse_explanation(raw, mode="live_model")
+                candidate = parse_explanation(raw, mode=getattr(self.client, "mode", "live_model"))
             except ModelError as exc:
                 notes.append(f"Live model call failed for '{finding.title}' ({exc}). Showing the deterministic explanation.")
             except ValueError as exc:
