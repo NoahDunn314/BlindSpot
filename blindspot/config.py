@@ -14,16 +14,32 @@ DEMO_FIXTURE_DIR = PROJECT_ROOT / "fixtures" / "demo"
 DEFAULT_MODEL = "claude-sonnet-5-5"
 
 
-def load_dotenv(path: Path = PROJECT_ROOT / ".env") -> None:
-    """Load KEY=VALUE pairs from a .env file without overriding real environment variables."""
+def _parse_dotenv(path: Path) -> dict[str, str]:
+    values: dict[str, str] = {}
     if not path.is_file():
-        return
+        return values
     for raw_line in path.read_text(encoding="utf-8").splitlines():
         line = raw_line.strip()
         if not line or line.startswith("#") or "=" not in line:
             continue
         key, _, value = line.partition("=")
-        os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
+        values[key.strip()] = value.strip().strip('"').strip("'")
+    return values
+
+
+def load_dotenv(path: Path = PROJECT_ROOT / ".env") -> None:
+    """Load KEY=VALUE pairs from a .env file without overriding real environment variables."""
+    for key, value in _parse_dotenv(path).items():
+        os.environ.setdefault(key, value)
+
+
+def dotenv_conflicts(path: Path = PROJECT_ROOT / ".env") -> list[str]:
+    """Names of variables whose environment value differs from the .env file. Never returns values.
+
+    This happens when an editor or shell loads .env itself and parses it differently, for example
+    by treating an unquoted '#' as the start of a comment, which silently cuts a password short.
+    """
+    return sorted(k for k, v in _parse_dotenv(path).items() if k in os.environ and os.environ[k] != v)
 
 
 @dataclass(frozen=True)

@@ -17,7 +17,7 @@ from typing import Iterable
 from uuid import uuid4
 
 from blindspot.adapters import SourceInfo
-from blindspot.config import PROJECT_ROOT, Settings
+from blindspot.config import PROJECT_ROOT, Settings, dotenv_conflicts
 from blindspot.models import Edge, Entity, Graph, InvestigationResult, Rejection, SourceRecord
 
 try:
@@ -91,7 +91,14 @@ def connect(settings: Settings, with_database: bool = True):
     try:
         return sf.connect(**kwargs)
     except SnowflakeDatabaseError as exc:
-        raise SnowflakeError(f"Could not connect to Snowflake account {settings.snowflake_account}: {exc}") from exc
+        conflicts = [name for name in dotenv_conflicts() if name.startswith("SNOWFLAKE_")]
+        hint = (
+            f" Note: {', '.join(conflicts)} in your environment differs from .env. An editor or shell that loads .env itself "
+            "may have cut a value at a '#'. Put the value in double quotes in .env and restart the terminal."
+            if conflicts
+            else ""
+        )
+        raise SnowflakeError(f"Could not connect to Snowflake account {settings.snowflake_account}: {exc}{hint}") from exc
 
 
 class SnowflakeRepository:

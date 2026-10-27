@@ -141,3 +141,14 @@ def test_connect_requires_an_authentication_method():
     )
     with pytest.raises(SnowflakeError, match="SNOWFLAKE_PASSWORD or SNOWFLAKE_AUTHENTICATOR"):
         snowflake_repo.connect(settings)
+
+
+def test_dotenv_conflicts_names_variables_whose_environment_value_was_cut_at_a_hash(monkeypatch, tmp_path):
+    from blindspot.config import dotenv_conflicts
+
+    env_file = tmp_path / ".env"
+    env_file.write_text("SNOWFLAKE_PASSWORD=abc#\nSNOWFLAKE_USER=me\nSNOWFLAKE_ROLE=\"r#\"\n", encoding="utf-8")
+    monkeypatch.setenv("SNOWFLAKE_PASSWORD", "abc")  # what a '#'-as-comment parser leaves behind
+    monkeypatch.setenv("SNOWFLAKE_USER", "me")
+    monkeypatch.setenv("SNOWFLAKE_ROLE", "r#")  # quoted values survive
+    assert dotenv_conflicts(env_file) == ["SNOWFLAKE_PASSWORD"]
